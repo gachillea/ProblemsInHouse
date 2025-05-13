@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ProblemsInHouse</string>
+    <string name="usernameText">username: </string>
+    <string name="passwordText">password: </string>
+    <string name="loginText">login</string>
+    <string name="registerText">register</string>
+    <string name="noAccountText">"You don't have an account"? </string>
+    <string name="usernameHint">username</string>
+    <string name="passwordHint">password\n</string>
+</resources>
