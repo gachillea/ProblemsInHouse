@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                COLUMN_USERNAME + " TEXT," +
+                COLUMN_USERNAME + " TEXT UNIQUE," +
                 COLUMN_PASSWORD + " TEXT)";
         db.execSQL(CREATE_USERS_TABLE);
     }
@@ -57,4 +57,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.insert(TABLE_USERS, null, values);
         return result != -1;
     }
+
+    public boolean userExists(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("users",
+                new String[]{"id"},
+                "username = ?",
+                new String[]{username},
+                null, null, null);
+
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return exists;
+    }
+
 }

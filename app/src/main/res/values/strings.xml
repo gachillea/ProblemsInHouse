@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">ProblemsInHouse</string>
-    <string name="usernameText">username: </string>
-    <string name="passwordText">password: </string>
-    <string name="loginText">login</string>
-    <string name="registerText">register</string>
+    <string name="usernameText">Username: </string>
+    <string name="passwordText">Password: </string>
+    <string name="loginText">Login</string>
+    <string name="registerText">Register</string>
     <string name="noAccountText">"You don't have an account"? </string>
-    <string name="usernameHint">username</string>
-    <string name="passwordHint">password\n</string>
+    <string name="usernameHint">Username</string>
+    <string name="passwordHint">Password</string>
+    <string name="fillAllFields">Fill all fields</string>
+    <string name="userAlreadyExists">Username already exists</string>
+    <string name="registerSuccess">User registered successfully</string>
+    <string name="registerFail">Registration Failed</string>
+    <string name="loginSuccess">Login Successful</string>
+    <string name="invalidCredentials">Invalid Credentials</string>
 </resources>
