@@ -38,7 +38,11 @@ public class LoginActivity extends AppCompatActivity {
             if (isValid) {
                 Toast.makeText(this, getString(R.string.loginSuccess), Toast.LENGTH_SHORT).show();
                 // Πήγαινε σε άλλο activity
-                // startActivity(new Intent(this, HomeActivity.class));
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("username", username);  // Στέλνουμε το username
+                startActivity(intent);
+                finish();
+
             } else {
                 Toast.makeText(this, getString(R.string.invalidCredentials), Toast.LENGTH_SHORT).show();
             }

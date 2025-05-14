@@ -4,7 +4,7 @@
     <string name="passwordText">Password: </string>
     <string name="loginText">Login</string>
     <string name="registerText">Register</string>
-    <string name="noAccountText">"You don't have an account"? </string>
+    <string name="noAccountText">"You don't have an account? "</string>
     <string name="usernameHint">Username</string>
     <string name="passwordHint">Password</string>
     <string name="fillAllFields">Fill all fields</string>
@@ -13,4 +13,12 @@
     <string name="registerFail">Registration Failed</string>
     <string name="loginSuccess">Login Successful</string>
     <string name="invalidCredentials">Invalid Credentials</string>
+    <string name="postFail">Post failed to upload\n</string>
+    <string name="postUpload">Post uploaded</string>
+    <string name="welcome">Welcome, </string>
+    <string name="title">Post title</string>
+    <string name="content">Post content</string>
+    <string name="createPost">Create post</string>
+    <string name="captureImage">Capture Image</string>
+
 </resources>
