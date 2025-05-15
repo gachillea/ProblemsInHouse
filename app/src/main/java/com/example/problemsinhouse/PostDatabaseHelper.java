@@ -32,7 +32,7 @@ public class PostDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTable = "CREATE TABLE " + TABLE_POSTS + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_USERNAME + " TEXT UNIQUE, " +
+                COLUMN_USERNAME + " TEXT, " +
                 COLUMN_TITLE + " TEXT, " +
                 COLUMN_CONTENT + " TEXT, " +
                 COLUMN_IMAGE_PATH + " TEXT)";
