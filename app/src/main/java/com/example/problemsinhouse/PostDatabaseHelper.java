@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PostDatabaseHelper extends SQLiteOpenHelper {
 
@@ -35,6 +36,8 @@ public class PostDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_TITLE + " TEXT, " +
                 COLUMN_CONTENT + " TEXT, " +
                 COLUMN_IMAGE_PATH + " TEXT)";
+
+        db.execSQL(createTable);
     }
 
 
@@ -58,21 +61,22 @@ public class PostDatabaseHelper extends SQLiteOpenHelper {
 
 
     // Ανάκτηση όλων των posts (π.χ. για εμφάνιση σε λίστα)
-    public ArrayList<String> getAllPosts() {
-        ArrayList<String> postList = new ArrayList<>();
+    public List<Post> getAllPosts() {
+        List<Post> postList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_POSTS + " ORDER BY " + COLUMN_ID + " DESC", null);
+        Cursor cursor = db.rawQuery("SELECT username, title, content, imagePath FROM posts", null);
 
         if (cursor.moveToFirst()) {
             do {
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE));
-                String content = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTENT));
-                String user = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USERNAME));
+                String username = cursor.getString(0);
+                String title = cursor.getString(1);
+                String content = cursor.getString(2);
+                String imagePath = cursor.getString(3);
 
-                postList.add("[" + user + "] " + title + ": " + content);
+                Post post = new Post(username, title, content, imagePath);
+                postList.add(post);
             } while (cursor.moveToNext());
         }
-
         cursor.close();
         return postList;
     }

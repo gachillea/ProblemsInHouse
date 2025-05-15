@@ -74,6 +74,11 @@ public class PostActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.fillAllFields), Toast.LENGTH_SHORT).show();
                 return;
             }
+            Log.d("DEBUG", "username: " + username);
+            Log.d("DEBUG", "title: " + title);
+            Log.d("DEBUG", "content: " + content);
+            Log.d("DEBUG", "imagePath: " + currentPhotoPath);
+
 
             boolean success = db.insertPost(username, title, content, currentPhotoPath);
             if (success) {
