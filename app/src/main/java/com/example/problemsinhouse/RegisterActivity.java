@@ -11,14 +11,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText usernameInput, passwordInput;
     private Button registerButton;
-    private DatabaseHelper db;
+    private FirestoreHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register); // θα το φτιάξουμε αμέσως μετά
 
-        db = new DatabaseHelper(this);
 
         usernameInput = findViewById(R.id.editTextUsername);
         passwordInput = findViewById(R.id.editTextPassword);
@@ -33,19 +32,17 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            if (db.userExists(username)) {
+            FirestoreHelper.userExists(username, success->{if (success) {
                 Toast.makeText(this, getString(R.string.userAlreadyExists), Toast.LENGTH_SHORT).show();
                 return;
-            }
+            }});
 
-            boolean success = db.insertUser(username, password);
-
-            if (success) {
+            FirestoreHelper.insertUser(username, password, success->{if (success) {
                 Toast.makeText(this, getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
                 finish(); // Επιστροφή στο login
             } else {
                 Toast.makeText(this, getString(R.string.registerFail), Toast.LENGTH_SHORT).show();
-            }
+            }});
         });
 
     }

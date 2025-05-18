@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView welcomeText;
     private String username;
     private RecyclerView recyclerView;
-    private PostDatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +38,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.postRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        db = new PostDatabaseHelper(this);
-        List<Post> allPosts = db.getAllPosts();
 
-        PostAdapter adapter = new PostAdapter(this, allPosts);
-        recyclerView.setAdapter(adapter);
+        FirestoreHelper.getAllPosts(new FirestoreHelper.PostsCallback() {
+            @Override
+            public void onCallback(List<Post> posts) {
+                PostAdapter adapter = new PostAdapter(MainActivity.this, posts);
+                recyclerView.setAdapter(adapter);
+            }
+        });
+
 
         // Listener για το κουμπί
         createPostButton.setOnClickListener(view -> {

@@ -30,7 +30,6 @@ public class PostActivity extends AppCompatActivity {
 
     private EditText titleInput, contentInput;
     private Button submitPostButton;
-    private PostDatabaseHelper db;
     private String username;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private String currentPhotoPath;
@@ -46,7 +45,7 @@ public class PostActivity extends AppCompatActivity {
         titleInput = findViewById(R.id.titleInput);
         contentInput = findViewById(R.id.contentInput);
         submitPostButton = findViewById(R.id.submitPostButton);
-        db = new PostDatabaseHelper(this);
+
 
 
 
@@ -79,14 +78,12 @@ public class PostActivity extends AppCompatActivity {
             Log.d("DEBUG", "content: " + content);
             Log.d("DEBUG", "imagePath: " + currentPhotoPath);
 
-
-            boolean success = db.insertPost(username, title, content, currentPhotoPath);
-            if (success) {
+            FirestoreHelper.insertPost(username, title, content, currentPhotoPath,success->{if (success) {
                 Toast.makeText(this, getString(R.string.postUpload), Toast.LENGTH_SHORT).show();
                 finish();  // Επιστρέφει στην MainActivity
             } else {
                 Toast.makeText(this, getString(R.string.postFail), Toast.LENGTH_SHORT).show();
-            }
+            }});
         });
     }
 

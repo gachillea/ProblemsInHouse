@@ -12,14 +12,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText usernameInput, passwordInput;
     private Button loginButton ,registerButton;
-    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        db = new DatabaseHelper(this);
 
         usernameInput = findViewById(R.id.editTextUsername);
         passwordInput = findViewById(R.id.passwordInput);
@@ -34,8 +32,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            boolean isValid = db.checkUser(username, password);
-            if (isValid) {
+            FirestoreHelper.checkUser(username, password, success ->{if (success) {
                 Toast.makeText(this, getString(R.string.loginSuccess), Toast.LENGTH_SHORT).show();
                 // Πήγαινε σε άλλο activity
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -45,7 +42,8 @@ public class LoginActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(this, getString(R.string.invalidCredentials), Toast.LENGTH_SHORT).show();
-            }
+            }});
+
         });
 
         registerButton = findViewById(R.id.registerButton);
