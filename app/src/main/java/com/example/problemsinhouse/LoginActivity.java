@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.loginSuccess), Toast.LENGTH_SHORT).show();
                 // Πήγαινε σε άλλο activity
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("username", username);  // Στέλνουμε το username
+                intent.putExtra("user", user); // Στέλνω τον user
                 startActivity(intent);
                 finish();
 

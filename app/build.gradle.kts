@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    //id("com.android.application")
+    id("org.jetbrains.kotlin.kapt") version "1.9.22"
 }
 
 android {
@@ -44,6 +46,12 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore-ktx:24.11.0")
+    implementation("com.google.firebase:firebase-firestore:24.10.0")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
 }
 
 apply(plugin = "com.google.gms.google-services")

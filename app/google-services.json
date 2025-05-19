@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "129767556875",
+    "project_id": "problemsinhouse-27630",
+    "storage_bucket": "problemsinhouse-27630.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129767556875:android:490db70cee79be6d29840e",
+        "android_client_info": {
+          "package_name": "com.example.problemsinhouse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf4iObPLRwUnU3tSmLY9kszIeTtD7TaTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

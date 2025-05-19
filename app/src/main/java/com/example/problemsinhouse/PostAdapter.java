@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
@@ -46,9 +48,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.username.setText(post.getUsername());
         holder.titleText.setText(post.getTitle());
         holder.contentText.setText(post.getContent());
-        if (post.getImagePath() != null) {
-            holder.postImage.setImageBitmap(BitmapFactory.decodeFile(post.getImagePath()));
+        if (post.getImagePath() != null && !post.getImagePath().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(post.getImagePath())
+                    .into(holder.postImage);
         }
+
     }
 
     @Override

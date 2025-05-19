@@ -20,6 +20,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -73,18 +78,46 @@ public class PostActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.fillAllFields), Toast.LENGTH_SHORT).show();
                 return;
             }
-            Log.d("DEBUG", "username: " + username);
-            Log.d("DEBUG", "title: " + title);
-            Log.d("DEBUG", "content: " + content);
-            Log.d("DEBUG", "imagePath: " + currentPhotoPath);
 
-            FirestoreHelper.insertPost(username, title, content, currentPhotoPath,success->{if (success) {
-                Toast.makeText(this, getString(R.string.postUpload), Toast.LENGTH_SHORT).show();
-                finish();  // Επιστρέφει στην MainActivity
-            } else {
-                Toast.makeText(this, getString(R.string.postFail), Toast.LENGTH_SHORT).show();
-            }});
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user == null) {
+                Toast.makeText(this, "Πρέπει να κάνεις login πρώτα", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            File photoFile = new File(currentPhotoPath);
+            if (!photoFile.exists()) {
+                Toast.makeText(this, "Το αρχείο εικόνας δεν βρέθηκε", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Uri fileUri = Uri.fromFile(photoFile);
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference imageRef = storageRef.child("images/" + fileUri.getLastPathSegment());
+
+            imageRef.putFile(fileUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String downloadUrl = uri.toString();
+                            FirestoreHelper.insertPost(username, title, content, downloadUrl, success -> {
+                                if (success) {
+                                    Toast.makeText(this, getString(R.string.postUpload), Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else {
+                                    Toast.makeText(this, getString(R.string.postFail), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(this, "Αποτυχία λήψης URL εικόνας", Toast.LENGTH_SHORT).show();
+                            Log.e("UPLOAD", "GetDownloadUrl failed", e);
+                        });
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Αποτυχία ανεβάσματος εικόνας", Toast.LENGTH_SHORT).show();
+                        Log.e("UPLOAD", "Upload failed", e);
+                    });
         });
+
     }
 
     private void dispatchTakePictureIntent() {
