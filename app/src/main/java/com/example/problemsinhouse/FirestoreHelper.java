@@ -23,10 +23,11 @@ public class FirestoreHelper {
             if (success){
                 return;
             }
-            else
-            { Map<String, Object> user = new HashMap<>();
+            else {
+                Map<String, Object> user = new HashMap<>();
                 user.put("username", username);
                 user.put("password", password);
+                user.put("lives",3);
 
                 db.collection("users").document(username)
                         .set(user)
@@ -42,12 +43,15 @@ public class FirestoreHelper {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String storedPassword = documentSnapshot.getString("password");
-                        callback.onResult(password.equals(storedPassword));
+                        if(password.equals(storedPassword)) {
+                            Long lives = (Long) documentSnapshot.get("lives");
+                            callback.onResult(new User(username, password, lives));
+                        }
                     } else {
-                        callback.onResult(false);
+                        callback.onResult(null);
                     }
                 })
-                .addOnFailureListener(e -> callback.onResult(false));
+                .addOnFailureListener(e -> callback.onResult(null));
     }
 
     // Έλεγχος αν υπάρχει username

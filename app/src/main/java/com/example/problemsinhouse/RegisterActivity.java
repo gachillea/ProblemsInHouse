@@ -11,7 +11,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText usernameInput, passwordInput;
     private Button registerButton;
-    private FirestoreHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

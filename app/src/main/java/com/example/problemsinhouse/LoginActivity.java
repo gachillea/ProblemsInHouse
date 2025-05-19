@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            FirestoreHelper.checkUser(username, password, success ->{if (success) {
+            FirestoreHelper.checkUser(username, password, user ->{if (user != null) {
                 Toast.makeText(this, getString(R.string.loginSuccess), Toast.LENGTH_SHORT).show();
                 // Πήγαινε σε άλλο activity
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
