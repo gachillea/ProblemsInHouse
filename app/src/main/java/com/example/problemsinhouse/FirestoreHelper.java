@@ -13,7 +13,7 @@ public class FirestoreHelper {
     }
 
     public interface PostsCallback {
-        void onCallback(List<Post> posts);
+        void onResult(List<Post> posts);
     }
 
 
@@ -78,10 +78,25 @@ public class FirestoreHelper {
                 .addOnFailureListener(e -> callback.onResult(false));
     }
 
+    public static void getUserPosts(String username, PostsCallback callback) {
+        db.collection("posts")
+                .whereEqualTo("username", username)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Post> posts = new ArrayList<>();
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Post post = doc.toObject(Post.class);
+                        posts.add(post);
+                    }
+                    callback.onResult(posts);
+                });
+    }
+
     // Λήψη όλων των post
-    public static void getAllPosts(final PostsCallback callback) {
+    public static void getAllPosts(String notusername, final PostsCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts")
+                .whereNotEqualTo("username", notusername)
                 .get()
                 .addOnCompleteListener(task -> {
                     List<Post> postList = new ArrayList<>();
@@ -95,9 +110,9 @@ public class FirestoreHelper {
                             Post post = new Post(username, title, content, imagePath);
                             postList.add(post);
                         }
-                        callback.onCallback(postList); // Επιστρέφει τη λίστα όταν είναι έτοιμη
+                        callback.onResult(postList); // Επιστρέφει τη λίστα όταν είναι έτοιμη
                     } else {
-                        callback.onCallback(postList); // άδεια λίστα αν αποτύχει
+                        callback.onResult(postList); // άδεια λίστα αν αποτύχει
                     }
                 });
     }

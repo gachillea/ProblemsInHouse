@@ -38,12 +38,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        FirestoreHelper.getAllPosts(new FirestoreHelper.PostsCallback() {
-            @Override
-            public void onCallback(List<Post> posts) {
-                PostAdapter adapter = new PostAdapter(MainActivity.this, posts);
-                recyclerView.setAdapter(adapter);
-            }
+        FirestoreHelper.getAllPosts(user.getUsername(), (FirestoreHelper.PostsCallback) posts -> {
+            PostAdapter adapter = new PostAdapter(MainActivity.this, posts);
+            recyclerView.setAdapter(adapter);
         });
 
 
