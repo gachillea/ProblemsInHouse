@@ -61,11 +61,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserPosts() {
-        FirestoreHelper.getUserPosts(currentUser.getUsername(), new FirestoreHelper.PostsCallback() {
-            @Override
-            public void onResult(List<Post> posts) {
-
-            }
+        FirestoreHelper.getUserPosts(currentUser.getUsername(), posts -> {
+            postList.clear();
+            postList.addAll(posts);
+            postAdapter.notifyDataSetChanged();
         });
     }
+
 }

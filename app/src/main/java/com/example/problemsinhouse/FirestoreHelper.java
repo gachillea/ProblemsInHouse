@@ -1,5 +1,7 @@
 package com.example.problemsinhouse;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.*;
 
 import java.util.*;
@@ -79,20 +81,27 @@ public class FirestoreHelper {
     }
 
     public static void getUserPosts(String username, PostsCallback callback) {
+        Log.d("FirestoreHelper", "Querying posts for username: " + username);
         db.collection("posts")
                 .whereEqualTo("username", username)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Post> posts = new ArrayList<>();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        Post post = doc.toObject(Post.class);
+                        Post post = new Post(
+                                doc.getId(),
+                                doc.getString("username"),
+                                doc.getString("title"),
+                                doc.getString("content"),
+                                doc.getString("imagePath")
+                        );
                         posts.add(post);
                     }
                     callback.onResult(posts);
                 });
     }
 
-    // Λήψη όλων των post
+    // Λήψη όλων των post εκτός από του ίδιου user
     public static void getAllPosts(String notusername, final PostsCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts")
@@ -102,12 +111,14 @@ public class FirestoreHelper {
                     List<Post> postList = new ArrayList<>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            String username = document.getString("username");
-                            String title = document.getString("title");
-                            String content = document.getString("content");
-                            String imagePath = document.getString("imagePath");
+                            Post post = new Post(
+                                    document.getId(),
+                                    document.getString("username"),
+                                    document.getString("title"),
+                                    document.getString("content"),
+                                    document.getString("imagePath")
+                            );
 
-                            Post post = new Post(username, title, content, imagePath);
                             postList.add(post);
                         }
                         callback.onResult(postList); // Επιστρέφει τη λίστα όταν είναι έτοιμη
@@ -115,6 +126,35 @@ public class FirestoreHelper {
                         callback.onResult(postList); // άδεια λίστα αν αποτύχει
                     }
                 });
+    }
+
+
+    public static void addCommentToPost(String postId, String username, String commentText, Runnable callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(postId).collection("comments")
+                .add(new Comment(username, commentText))
+                .addOnSuccessListener(documentReference -> callback.run());
+    }
+
+    public static void getCommentsForPost(String postId, FirestoreHelper.Callback<List<Comment>> callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("posts")
+                .document(postId)
+                .collection("comments")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<Comment> comments = new ArrayList<>();
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Comment comment = doc.toObject(Comment.class);
+                        if (comment != null) {
+                            comment.setId(doc.getId()); // ✅ αποθήκευση του id
+                            comments.add(comment);
+                        }
+                    }
+                    callback.onResult(comments);
+                })
+                .addOnFailureListener(e -> callback.onResult(new ArrayList<>()));
     }
 
 }

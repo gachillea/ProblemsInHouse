@@ -32,6 +32,8 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".PostActivity" />
+        <activity android:name=".ProfileActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.problemsinhouse.fileprovider"

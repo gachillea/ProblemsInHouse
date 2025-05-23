@@ -35,4 +35,15 @@
         app:layout_constraintTop_toBottomOf="@+id/welcomeText"
         app:layout_constraintVertical_bias="1.0" />
 
+    <Button
+        android:id="@+id/profileButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Το Προφίλ μου"
+        app:layout_constraintBottom_toTopOf="@id/createPostButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

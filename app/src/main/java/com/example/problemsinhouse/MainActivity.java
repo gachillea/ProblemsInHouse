@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button createPostButton;
+    private Button createPostButton, profileButton;
     private TextView welcomeText;
     private User user;
     private RecyclerView recyclerView;
@@ -44,11 +44,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // Listener για το κουμπί
         createPostButton.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, PostActivity.class);
             intent.putExtra("user", user);  // στέλνεις τον χρήστη στο PostActivity
             startActivity(intent);
         });
+
+        profileButton = findViewById(R.id.profileButton);
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        });
+
     }
 }

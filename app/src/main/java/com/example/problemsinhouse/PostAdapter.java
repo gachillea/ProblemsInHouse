@@ -1,6 +1,7 @@
 package com.example.problemsinhouse;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .load(post.getImagePath())
                     .into(holder.postImage);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, PostDetailActivity.class);
+            intent.putExtra("post", post);
+            context.startActivity(intent);
+        });
+
 
     }
 
