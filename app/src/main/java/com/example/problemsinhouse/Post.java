@@ -11,6 +11,7 @@ public class Post implements Parcelable {
     private String title;
     private String content;
     private String imagePath;
+    public Post(){}
 
     public Post(String id, String username, String title, String content, String imagePath) {
         this.id = id;

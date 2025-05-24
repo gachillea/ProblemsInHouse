@@ -55,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        postAdapter = new PostAdapter(this, postList);
+        postAdapter = new PostAdapter(this, postList, currentUser);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         postsRecyclerView.setAdapter(postAdapter);
     }

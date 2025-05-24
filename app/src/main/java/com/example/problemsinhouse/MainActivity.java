@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         FirestoreHelper.getAllPosts(user.getUsername(), (FirestoreHelper.PostsCallback) posts -> {
-            PostAdapter adapter = new PostAdapter(MainActivity.this, posts);
+            PostAdapter adapter = new PostAdapter(MainActivity.this, posts , user);
             recyclerView.setAdapter(adapter);
         });
 

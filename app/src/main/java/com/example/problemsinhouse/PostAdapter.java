@@ -2,6 +2,7 @@ package com.example.problemsinhouse;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,12 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private final List<Post> posts;
     private final Context context;
+    private User user;
 
-    public PostAdapter(Context context, List<Post> posts) {
+    public PostAdapter(Context context, List<Post> posts, User user) {
         this.context = context;
         this.posts = posts;
+        this.user = user;
     }
 
     public static class PostViewHolder extends RecyclerView.ViewHolder {
@@ -55,9 +58,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         holder.itemView.setOnClickListener(v -> {
+            Log.d("DEBUG", "Going to start PostDetailActivity");
             Intent intent = new Intent(context, PostDetailActivity.class);
+
             intent.putExtra("post", post);
+            intent.putExtra("user", user);
+
             context.startActivity(intent);
+            Log.d("DEBUG", "PostDetailActivity started?");
         });
 
 

@@ -12,7 +12,15 @@ public class FirestoreHelper {
 
     public interface Callback<T> {
         void onResult(T result);
+
     }
+
+    public interface CommentCallback {
+        void onSuccess(List<Comment> comments);
+
+        void onResult(boolean b);
+    }
+
 
     public interface PostsCallback {
         void onResult(List<Post> posts);
@@ -89,7 +97,7 @@ public class FirestoreHelper {
                     List<Post> posts = new ArrayList<>();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         Post post = new Post(
-                                doc.getId(),
+                                doc.getString("id"),
                                 doc.getString("username"),
                                 doc.getString("title"),
                                 doc.getString("content"),
@@ -112,7 +120,7 @@ public class FirestoreHelper {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Post post = new Post(
-                                    document.getId(),
+                                    document.getString("id"),
                                     document.getString("username"),
                                     document.getString("title"),
                                     document.getString("content"),
@@ -129,14 +137,21 @@ public class FirestoreHelper {
     }
 
 
-    public static void addCommentToPost(String postId, String username, String commentText, Runnable callback) {
+    public static void addCommentToPost(String postId, String username, String commentText, Callback<Boolean> callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts").document(postId).collection("comments")
                 .add(new Comment(username, commentText))
-                .addOnSuccessListener(documentReference -> callback.run());
+                .addOnSuccessListener(documentReference -> {
+                    callback.onResult(true);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreHelper", "Failed to add comment", e);
+                    callback.onResult(false);
+                });
     }
 
-    public static void getCommentsForPost(String postId, FirestoreHelper.Callback<List<Comment>> callback) {
+
+    public static void getCommentsForPost(String postId, CommentCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("posts")
@@ -148,13 +163,14 @@ public class FirestoreHelper {
                     for (DocumentSnapshot doc : querySnapshot) {
                         Comment comment = doc.toObject(Comment.class);
                         if (comment != null) {
-                            comment.setId(doc.getId()); // ✅ αποθήκευση του id
+                            comment.setId(doc.getId());
                             comments.add(comment);
                         }
                     }
-                    callback.onResult(comments);
+                    callback.onSuccess(comments);
                 })
-                .addOnFailureListener(e -> callback.onResult(new ArrayList<>()));
+                .addOnFailureListener(e -> callback.onSuccess(null));
+        }
     }
 
-}
+
