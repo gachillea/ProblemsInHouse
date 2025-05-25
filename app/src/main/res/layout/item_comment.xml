@@ -22,6 +22,6 @@
             android:id="@+id/commentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#444" />
+            android:textColor="#000" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

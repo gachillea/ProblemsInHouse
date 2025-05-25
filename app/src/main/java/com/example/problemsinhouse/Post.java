@@ -29,6 +29,7 @@ public class Post implements Parcelable {
     }
 
     protected Post(Parcel in) {
+        id = in.readString();
         username = in.readString();
         title = in.readString();
         content = in.readString();
@@ -61,6 +62,7 @@ public class Post implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(id);
         parcel.writeString(username);
         parcel.writeString(title);
         parcel.writeString(content);

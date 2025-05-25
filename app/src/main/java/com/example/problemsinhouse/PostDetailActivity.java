@@ -46,6 +46,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
         currentUser = getIntent().getParcelableExtra("user");
         currentPost = getIntent().getParcelableExtra("post");
+
         if (currentPost == null) {
             Toast.makeText(this, "Δεν βρέθηκε το Post", Toast.LENGTH_SHORT).show();
             finish();
@@ -89,8 +90,8 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void loadComments() {
-        if (currentPost == null || currentPost.getId() == null) {
-            Log.e("loadComments", "currentPost or post ID is null");
+        if (currentPost.getId() == null) {
+            Log.e("loadComments", "post ID is null");
             return;
         }
 
