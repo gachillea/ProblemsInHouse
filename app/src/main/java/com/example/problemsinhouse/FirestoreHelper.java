@@ -84,7 +84,15 @@ public class FirestoreHelper {
 
         db.collection("posts")
                 .add(post)
-                .addOnSuccessListener(documentReference -> callback.onResult(true))
+                .addOnSuccessListener(documentReference -> {
+                    String id = documentReference.getId();
+                    documentReference.update("id", id)
+                            .addOnSuccessListener(aVoid -> callback.onResult(true))
+                            .addOnFailureListener(e -> {
+                                e.printStackTrace();
+                                callback.onResult(false);
+                            });
+                })
                 .addOnFailureListener(e -> callback.onResult(false));
     }
 

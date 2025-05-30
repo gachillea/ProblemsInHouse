@@ -2,6 +2,7 @@ package com.example.problemsinhouse;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PostDetailActivity extends AppCompatActivity {
 
@@ -47,6 +49,10 @@ public class PostDetailActivity extends AppCompatActivity {
         currentUser = getIntent().getParcelableExtra("user");
         currentPost = getIntent().getParcelableExtra("post");
 
+        if (!currentPost.getUsername().equals(currentUser.getUsername())) {
+            commentInput.setVisibility(View.VISIBLE);
+        }
+
         if (currentPost == null) {
             Toast.makeText(this, "Δεν βρέθηκε το Post", Toast.LENGTH_SHORT).show();
             finish();
@@ -60,7 +66,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
         titleText.setText(currentPost.getTitle());
         contentText.setText(currentPost.getContent());
-        usernameText.setText("by " + currentPost.getUsername());
+        usernameText.setText(currentPost.getUsername());
 
 
         if (currentPost.getImagePath() != null && !currentPost.getImagePath().isEmpty()) {
