@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,9 +49,11 @@ public class PostDetailActivity extends AppCompatActivity {
 
         currentUser = getIntent().getParcelableExtra("user");
         currentPost = getIntent().getParcelableExtra("post");
+        boolean sameUser = currentPost.getUsername().equals(currentUser.getUsername());
 
-        if (!currentPost.getUsername().equals(currentUser.getUsername())) {
+        if (!sameUser) {
             commentInput.setVisibility(View.VISIBLE);
+            submitComment.setVisibility(View.VISIBLE);
         }
 
         if (currentPost == null) {
@@ -73,7 +76,13 @@ public class PostDetailActivity extends AppCompatActivity {
             Glide.with(this).load(currentPost.getImagePath()).into(postImage);
         }
 
-        commentAdapter = new CommentAdapter(this, commentList);
+        commentAdapter = new CommentAdapter(this, commentList, sameUser, new CommentAdapter.OnSolveClickListener() {
+            @Override
+            public void onSolveClick(Comment comment) {
+                showConfirmDialogAndDelete();
+            }
+        });
+
         commentsRecycler.setLayoutManager(new LinearLayoutManager(this));
         commentsRecycler.setAdapter(commentAdapter);
         Log.d("debug","lauos");
@@ -93,6 +102,24 @@ public class PostDetailActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void showConfirmDialogAndDelete() {
+        new AlertDialog.Builder(this)
+                .setTitle("Ολοκλήρωση Αναφοράς")
+                .setMessage("Είσαι σίγουρος ότι αυτό το σχόλιο σε βοήθησε και θέλεις να διαγράψεις το post;")
+                .setPositiveButton("Ναι", (dialog, which) -> {
+                    FirestoreHelper.deletePostAndComments(currentPost.getId(), success -> {
+                        if (success) {
+                            Toast.makeText(this, "Το post διαγράφηκε", Toast.LENGTH_SHORT).show();
+                            finish(); // Κλείνει το activity
+                        } else {
+                            Toast.makeText(this, "Αποτυχία διαγραφής", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Όχι", null)
+                .show();
     }
 
     private void loadComments() {

@@ -1,6 +1,7 @@
 package com.example.problemsinhouse;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.*;
 
@@ -179,6 +180,36 @@ public class FirestoreHelper {
                 })
                 .addOnFailureListener(e -> callback.onSuccess(null));
         }
+
+    public static void deletePostAndComments(String postId, Callback<Boolean> callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Log.d("DELETE", "Deleting post: " + postId);
+        // Διαγραφή των σχολίων πρώτα
+        db.collection("posts").document(postId).collection("comments")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    WriteBatch batch = db.batch();
+
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        batch.delete(doc.getReference());
+                    }
+
+                    batch.commit()
+                            .addOnSuccessListener(aVoid -> {
+                                // Διαγραφή του ίδιου του post
+                                db.collection("posts").document(postId)
+                                        .delete()
+                                        .addOnSuccessListener(aVoid2 -> callback.onResult(true))
+                                        .addOnFailureListener(e -> callback.onResult(false));
+                            })
+                            .addOnFailureListener(e -> callback.onResult(false));
+                })
+                .addOnFailureListener(e -> callback.onResult(false));
     }
+
+
+
+
+}
 
 

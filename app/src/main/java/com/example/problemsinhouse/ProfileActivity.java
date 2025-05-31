@@ -54,6 +54,13 @@ public class ProfileActivity extends AppCompatActivity {
         loadUserPosts();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserPosts(); // Ξαναφορτώνει τα posts από τη βάση
+    }
+
+
     private void setupRecyclerView() {
         postAdapter = new PostAdapter(this, postList, currentUser);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
