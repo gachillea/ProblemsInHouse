@@ -80,21 +80,26 @@ public class PostActivity extends AppCompatActivity {
 
             User user = getIntent().getParcelableExtra("user");
             if (user == null) {
-                Toast.makeText(this, "Πρέπει να κάνεις login πρώτα", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.noLogin), Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (currentPhotoPath == null) {
-                Toast.makeText(this, "Πρέπει να τραβήξεις μια φωτογραφία", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.noPicture), Toast.LENGTH_SHORT).show();
                 return;
             }
 
             File photoFile = new File(currentPhotoPath);
             if (!photoFile.exists()) {
-                Toast.makeText(this, "Το αρχείο εικόνας δεν βρέθηκε", Toast.LENGTH_SHORT).show();
                 return;
             }
             submitPostButton.setEnabled(false);
+
+            if (user.getLives()==0)
+            {
+                Toast.makeText(this, getString(R.string.zeroLives), Toast.LENGTH_LONG).show();
+                return;
+            }
 
             try {
                 InputStream stream = new FileInputStream(photoFile);
@@ -109,6 +114,14 @@ public class PostActivity extends AppCompatActivity {
                                     submitPostButton.setEnabled(true);
                                     if (success) {
                                         Toast.makeText(this, getString(R.string.postUpload), Toast.LENGTH_SHORT).show();
+
+                                        FirestoreHelper.updateLives(user.getUsername(), -1, successful -> {
+                                            if (successful) {
+                                                user.setLives(user.getLives()-1);
+                                                Log.d("Lives", user.getLives().toString());
+                                            }
+                                        });
+
                                         finish();
                                     } else {
                                         Toast.makeText(this, getString(R.string.postFail), Toast.LENGTH_SHORT).show();
@@ -116,18 +129,15 @@ public class PostActivity extends AppCompatActivity {
                                 });
                             }).addOnFailureListener(e -> {
                                 submitPostButton.setEnabled(true);
-                                Toast.makeText(this, "Αποτυχία λήψης URL εικόνας", Toast.LENGTH_SHORT).show();
                                 Log.e("UPLOAD", "GetDownloadUrl failed", e);
                             });
                         })
                         .addOnFailureListener(e -> {
                             submitPostButton.setEnabled(true);
-                            Toast.makeText(this, "Αποτυχία ανεβάσματος εικόνας", Toast.LENGTH_SHORT).show();
                             Log.e("UPLOAD", "Upload failed", e);
                         });
 
             } catch (FileNotFoundException e) {
-                Toast.makeText(this, "Το αρχείο εικόνας δεν βρέθηκε", Toast.LENGTH_SHORT).show();
                 Log.e("UPLOAD", "File not found", e);
             }
         });
@@ -153,11 +163,9 @@ public class PostActivity extends AppCompatActivity {
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            } else {
-                Toast.makeText(this, "Το αρχείο εικόνας είναι null", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Καμία κάμερα διαθέσιμη", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.noCamera), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -179,7 +187,6 @@ public class PostActivity extends AppCompatActivity {
                 imageUri = FileProvider.getUriForFile(this, "com.example.problemsinhouse.fileprovider", file);
                 postImage.setImageBitmap(BitmapFactory.decodeFile(currentPhotoPath));
             } else {
-                Toast.makeText(this, "Η εικόνα δεν αποθηκεύτηκε σωστά", Toast.LENGTH_SHORT).show();
                 Log.e("UPLOAD", "File length = 0 or file missing");
             }
         }

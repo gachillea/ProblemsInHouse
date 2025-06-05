@@ -207,27 +207,60 @@ public class FirestoreHelper {
                 .addOnFailureListener(e -> callback.onResult(false));
     }
 
-    public static void getUserNotifications(String username, Callback<List<Notification>> callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("users")
-                .document(username)
-                .collection("notifications")
+    public static void getNotificationsForUser(String username, Callback<List<Notification>> callback) {
+        Log.d("debugn","notificaytions");
+        FirebaseFirestore.getInstance().collection("notifications")
+                .whereEqualTo("receiverUsername", username)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(snapshot -> {
                     List<Notification> notifications = new ArrayList<>();
-                    for (var doc : snapshot.getDocuments()) {
-                        Notification item = doc.toObject(Notification.class);
-                        if (item != null) {
-                            notifications.add(item);
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        Notification notif = doc.toObject(Notification.class);
+                        Log.d("debugn","notificaytions");
+                        if (notif != null)
+                        {
+                            notifications.add(notif);
                         }
                     }
                     callback.onResult(notifications);
                 })
-                .addOnFailureListener(e -> {
-                    callback.onResult(null);
-                });
+                .addOnFailureListener(e -> callback.onResult(new ArrayList<>()));
+    }
+
+
+    public static void sendNotification(String receiverUsername, String message, Callback<Boolean> callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("receiverUsername", receiverUsername);
+        data.put("message", message);
+        data.put("timestamp", System.currentTimeMillis());
+
+        db.collection("notifications")
+                .add(data)
+                .addOnSuccessListener(doc -> callback.onResult(true))
+                .addOnFailureListener(e -> callback.onResult(false));
+    }
+
+    public static void updateLives(String username, int delta, Callback<Boolean> callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference userRef = db.collection("users").document(username);
+
+        db.runTransaction(transaction -> {
+            DocumentSnapshot snapshot = transaction.get(userRef);
+            Long currentLives = snapshot.getLong("lives");
+
+            long updatedLives = currentLives + delta;
+
+            transaction.update(userRef, "lives", updatedLives);
+            return null;
+        }).addOnSuccessListener(unused -> {
+            callback.onResult(true);
+        }).addOnFailureListener(e -> {
+            callback.onResult(false);
+        });
     }
 
 

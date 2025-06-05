@@ -49,9 +49,9 @@ public class PostDetailActivity extends AppCompatActivity {
 
         currentUser = getIntent().getParcelableExtra("user");
         currentPost = getIntent().getParcelableExtra("post");
-        boolean sameUser = currentPost.getUsername().equals(currentUser.getUsername());
 
-        if (!sameUser) {
+
+        if (!currentUser.getUsername().equals(currentPost.getUsername())) {
             commentInput.setVisibility(View.VISIBLE);
             submitComment.setVisibility(View.VISIBLE);
         }
@@ -76,10 +76,24 @@ public class PostDetailActivity extends AppCompatActivity {
             Glide.with(this).load(currentPost.getImagePath()).into(postImage);
         }
 
-        commentAdapter = new CommentAdapter(this, commentList, sameUser, new CommentAdapter.OnSolveClickListener() {
+        commentAdapter = new CommentAdapter(this, commentList, currentUser.getUsername(), currentPost.getUsername(), new CommentAdapter.OnSolveClickListener() {
             @Override
             public void onSolveClick(Comment comment) {
                 showConfirmDialogAndDelete();
+
+                FirestoreHelper.sendNotification(
+                        comment.getUsername(), // αυτός που έγραψε το comment
+                        currentUser.getUsername() + getString(R.string.commentHelped),
+                        success -> {}
+                );
+
+                FirestoreHelper.updateLives(comment.getUsername(), +1, success -> {
+                    if (success) {
+                        Log.d("Lives", "Αύξηση lives για τον " + comment.getUsername());
+                    }
+                });
+
+
             }
         });
 
@@ -97,7 +111,16 @@ public class PostDetailActivity extends AppCompatActivity {
                         commentInput.setText("");
                         loadComments();
                     }
+
+
                 });
+
+                FirestoreHelper.sendNotification(
+                        currentPost.getUsername(), // αυτός που έγραψε το post
+                        currentUser.getUsername() + getString(R.string.newComment) + currentPost.getTitle(),
+                        success -> {}
+                );
+
             }
         });
 
@@ -106,19 +129,19 @@ public class PostDetailActivity extends AppCompatActivity {
 
     private void showConfirmDialogAndDelete() {
         new AlertDialog.Builder(this)
-                .setTitle("Ολοκλήρωση Αναφοράς")
-                .setMessage("Είσαι σίγουρος ότι αυτό το σχόλιο σε βοήθησε και θέλεις να διαγράψεις το post;")
-                .setPositiveButton("Ναι", (dialog, which) -> {
+                .setTitle(getString(R.string.problemSolved))
+                .setMessage(getString(R.string.deletePostSure))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
                     FirestoreHelper.deletePostAndComments(currentPost.getId(), success -> {
                         if (success) {
-                            Toast.makeText(this, "Το post διαγράφηκε", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.postDeleted), Toast.LENGTH_SHORT).show();
                             finish(); // Κλείνει το activity
                         } else {
-                            Toast.makeText(this, "Αποτυχία διαγραφής", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.deleteFail), Toast.LENGTH_SHORT).show();
                         }
                     });
                 })
-                .setNegativeButton("Όχι", null)
+                .setNegativeButton(getString(R.string.no), null)
                 .show();
     }
 

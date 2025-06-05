@@ -54,4 +54,8 @@ public class User implements Parcelable {
         parcel.writeString(password);
         parcel.writeLong(lives);
     }
+
+    public void setLives(long l) {
+        this.lives = l;
+    }
 }

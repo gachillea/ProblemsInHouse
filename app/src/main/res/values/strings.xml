@@ -20,5 +20,19 @@
     <string name="content">Post content</string>
     <string name="createPost">Create post</string>
     <string name="captureImage">Capture Image</string>
+    <string name="zeroLives">You have 0 lives to make a post, try helping someone else first</string>
+    <string name="noPicture">You need to take a picture first</string>
+    <string name="noLogin">You have to login first</string>
+    <string name="noCamera">no Camera available</string>
+    <string name="commentHelped">" stated that your comment was helpful"</string>
+    <string name="newComment">" commented at your problem with title "</string>
+    <string name="deletePostSure">Are you sure that this comment helped yot and you want to delete the post?</string>
+    <string name="yes">Yes</string>
+    <string name="postDeleted">Post deleted</string>
+    <string name="deleteFail">Delete failed</string>
+    <string name="no">No</string>
+    <string name="problemSolved">Problem Solved?</string>
+    <string name="lives">"Lives: "</string>
+    <string name="noUser">No user found</string>
 
 </resources>

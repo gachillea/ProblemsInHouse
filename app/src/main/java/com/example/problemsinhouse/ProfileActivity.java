@@ -42,13 +42,13 @@ public class ProfileActivity extends AppCompatActivity {
         currentUser = getIntent().getParcelableExtra("user");
 
         if (currentUser == null) {
-            Toast.makeText(this, "Δεν βρέθηκε ο χρήστης", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.noUser), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
         usernameTextView.setText(currentUser.getUsername());
-        livesTextView.setText("Lives: " + currentUser.getLives());
+        livesTextView.setText(getString(R.string.lives) + currentUser.getLives());
 
         setupRecyclerView();
         loadUserPosts();

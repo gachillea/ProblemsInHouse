@@ -15,13 +15,14 @@ import java.util.List;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
     private Context context;
     private List<Comment> commentList;
-    private boolean sameUser;
+    private String currentUsername,currentPostUsername;
     private OnSolveClickListener solveClickListener;
 
-    public CommentAdapter(Context context, List<Comment> commentList, boolean sameUser, OnSolveClickListener solveClickListener) {
+    public CommentAdapter(Context context, List<Comment> commentList, String currentUsername, String currentPostUsername, OnSolveClickListener solveClickListener) {
         this.context = context;
         this.commentList = commentList;
-        this.sameUser = sameUser;
+        this.currentUsername = currentUsername;
+        this.currentPostUsername = currentPostUsername;
         this.solveClickListener = solveClickListener;
     }
 
@@ -42,7 +43,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Comment comment = commentList.get(position);
         holder.usernameText.setText(comment.getUsername());
         holder.commentText.setText(comment.getText());
-        if (sameUser){
+        if (currentUsername.equals(currentPostUsername)){
             holder.solveButton.setVisibility(View.VISIBLE);
         }
 
@@ -51,6 +52,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             if (solveClickListener != null) {
                 solveClickListener.onSolveClick(comment); // ενημερώνει το Activity
             }
+
         });
 
     }

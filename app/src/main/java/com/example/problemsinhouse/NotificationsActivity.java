@@ -1,6 +1,7 @@
 package com.example.problemsinhouse;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +38,7 @@ public class NotificationsActivity extends AppCompatActivity {
     }
 
     private void loadNotifications(String username) {
-        FirestoreHelper.getUserNotifications(username, notifications -> {
+        FirestoreHelper.getNotificationsForUser(username, notifications -> {
             notificationList.clear();
             if (notifications != null) {
                 notificationList.addAll(notifications);
