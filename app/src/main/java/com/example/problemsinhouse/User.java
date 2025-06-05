@@ -58,4 +58,8 @@ public class User implements Parcelable {
     public void setLives(long l) {
         this.lives = l;
     }
+
+    public String getPassword() {
+        return password;
+    }
 }

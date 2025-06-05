@@ -26,32 +26,37 @@ public class ProfileActivity extends AppCompatActivity {
     private PostAdapter postAdapter;
     private List<Post> postList = new ArrayList<>();
 
-    private User currentUser;  // Ο χρήστης που έχει γίνει login
+    private User currentUser;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
 
-        usernameTextView = findViewById(R.id.usernameTextView);
-        livesTextView = findViewById(R.id.livesTextView);
-        postsRecyclerView = findViewById(R.id.postsRecyclerView);
-
-        // Από το intent ή FirebaseAuth
         currentUser = getIntent().getParcelableExtra("user");
+        FirestoreHelper.checkUser(currentUser.getUsername(), currentUser.getPassword(), possiblyUpdatedUser ->{
+            currentUser = possiblyUpdatedUser; // για την περίπτωση που ο αριθμός των ζωών του χρήστη έχει αλλάξει
+            setContentView(R.layout.activity_profile);
 
-        if (currentUser == null) {
-            Toast.makeText(this, getString(R.string.noUser), Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+            usernameTextView = findViewById(R.id.usernameTextView);
+            livesTextView = findViewById(R.id.livesTextView);
+            postsRecyclerView = findViewById(R.id.postsRecyclerView);
 
-        usernameTextView.setText(currentUser.getUsername());
-        livesTextView.setText(getString(R.string.lives) + currentUser.getLives());
+            if (currentUser == null) {
+                Toast.makeText(this, getString(R.string.noUser), Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
 
-        setupRecyclerView();
-        loadUserPosts();
+            usernameTextView.setText(currentUser.getUsername());
+            livesTextView.setText(getString(R.string.lives) + currentUser.getLives());
+
+            setupRecyclerView();
+            loadUserPosts();
+
+        });
+
+
     }
 
     @Override

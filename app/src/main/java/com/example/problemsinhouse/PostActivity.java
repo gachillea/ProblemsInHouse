@@ -1,17 +1,23 @@
 package com.example.problemsinhouse;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,6 +87,7 @@ public class PostActivity extends AppCompatActivity {
             User user = getIntent().getParcelableExtra("user");
             if (user == null) {
                 Toast.makeText(this, getString(R.string.noLogin), Toast.LENGTH_SHORT).show();
+                finish();
                 return;
             }
 
@@ -98,6 +105,7 @@ public class PostActivity extends AppCompatActivity {
             if (user.getLives()==0)
             {
                 Toast.makeText(this, getString(R.string.zeroLives), Toast.LENGTH_LONG).show();
+                finish();
                 return;
             }
 
@@ -191,5 +199,24 @@ public class PostActivity extends AppCompatActivity {
             }
         }
 
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        Log.d("Lives","mphke");
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof TextView) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event);
     }
 }

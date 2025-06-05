@@ -20,7 +20,7 @@
     <string name="content">Post content</string>
     <string name="createPost">Create post</string>
     <string name="captureImage">Capture Image</string>
-    <string name="zeroLives">You have 0 lives to make a post, try helping someone else first</string>
+    <string name="zeroLives">You have 0 lives to post, try helping someone else first</string>
     <string name="noPicture">You need to take a picture first</string>
     <string name="noLogin">You have to login first</string>
     <string name="noCamera">no Camera available</string>
@@ -34,5 +34,8 @@
     <string name="problemSolved">Problem Solved?</string>
     <string name="lives">"Lives: "</string>
     <string name="noUser">No user found</string>
+    <string name="myProfile">My Profile</string>
+    <string name="Notifications">Notifications</string>
+    <string name="wasHelpful">This comment helped me</string>
 
 </resources>
