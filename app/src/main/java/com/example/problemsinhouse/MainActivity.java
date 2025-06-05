@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button createPostButton, profileButton;
+    private Button createPostButton, profileButton, notificationsButton ;
     private TextView welcomeText;
     private User user;
     private RecyclerView recyclerView;
@@ -57,5 +57,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        notificationsButton = findViewById(R.id.notificationsButton);
+
+        notificationsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        });
     }
 }

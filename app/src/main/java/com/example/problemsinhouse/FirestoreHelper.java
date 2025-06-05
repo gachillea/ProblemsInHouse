@@ -207,6 +207,30 @@ public class FirestoreHelper {
                 .addOnFailureListener(e -> callback.onResult(false));
     }
 
+    public static void getUserNotifications(String username, Callback<List<Notification>> callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(username)
+                .collection("notifications")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Notification> notifications = new ArrayList<>();
+                    for (var doc : snapshot.getDocuments()) {
+                        Notification item = doc.toObject(Notification.class);
+                        if (item != null) {
+                            notifications.add(item);
+                        }
+                    }
+                    callback.onResult(notifications);
+                })
+                .addOnFailureListener(e -> {
+                    callback.onResult(null);
+                });
+    }
+
+
 
 
 

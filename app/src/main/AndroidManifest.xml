@@ -34,6 +34,8 @@
         <activity android:name=".PostActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PostDetailActivity"/>
+        <activity android:name=".NotificationsActivity" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
