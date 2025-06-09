@@ -34,13 +34,25 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         currentUser = getIntent().getParcelableExtra("user");
+
+        setContentView(R.layout.activity_profile);
+
+        usernameTextView = findViewById(R.id.usernameTextView);
+        livesTextView = findViewById(R.id.livesTextView);
+        postsRecyclerView = findViewById(R.id.postsRecyclerView);
+
+        if (currentUser == null) {
+            Toast.makeText(this, getString(R.string.noUser), Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        usernameTextView.setText(currentUser.getUsername());
+
         FirestoreHelper.checkUser(currentUser.getUsername(), currentUser.getPassword(), possiblyUpdatedUser ->{
             currentUser = possiblyUpdatedUser; // για την περίπτωση που ο αριθμός των ζωών του χρήστη έχει αλλάξει
-            setContentView(R.layout.activity_profile);
 
-            usernameTextView = findViewById(R.id.usernameTextView);
-            livesTextView = findViewById(R.id.livesTextView);
-            postsRecyclerView = findViewById(R.id.postsRecyclerView);
+
 
             if (currentUser == null) {
                 Toast.makeText(this, getString(R.string.noUser), Toast.LENGTH_SHORT).show();
@@ -48,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
                 return;
             }
 
-            usernameTextView.setText(currentUser.getUsername());
+
             livesTextView.setText(getString(R.string.lives) + currentUser.getLives());
 
             setupRecyclerView();

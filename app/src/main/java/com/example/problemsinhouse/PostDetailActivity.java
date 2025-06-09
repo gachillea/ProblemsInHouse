@@ -18,12 +18,12 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PostDetailActivity extends AppCompatActivity {
 
     private ImageView postImage;
     private TextView titleText, contentText, usernameText;
+    private View commentInputLayout;
     private EditText commentInput;
     private Button submitComment;
     private RecyclerView commentsRecycler;
@@ -46,12 +46,14 @@ public class PostDetailActivity extends AppCompatActivity {
         commentInput = findViewById(R.id.commentInput);
         submitComment = findViewById(R.id.submitComment);
         commentsRecycler = findViewById(R.id.commentsRecycler);
+        commentInputLayout = findViewById(R.id.commentInputLayout);
 
         currentUser = getIntent().getParcelableExtra("user");
         currentPost = getIntent().getParcelableExtra("post");
 
 
         if (!currentUser.getUsername().equals(currentPost.getUsername())) {
+            commentInputLayout.setVisibility(View.VISIBLE);
             commentInput.setVisibility(View.VISIBLE);
             submitComment.setVisibility(View.VISIBLE);
         }
@@ -79,21 +81,7 @@ public class PostDetailActivity extends AppCompatActivity {
         commentAdapter = new CommentAdapter(this, commentList, currentUser.getUsername(), currentPost.getUsername(), new CommentAdapter.OnSolveClickListener() {
             @Override
             public void onSolveClick(Comment comment) {
-                showConfirmDialogAndDelete();
-
-                FirestoreHelper.sendNotification(
-                        comment.getUsername(), // αυτός που έγραψε το comment
-                        currentUser.getUsername() + getString(R.string.commentHelped),
-                        success -> {}
-                );
-
-                FirestoreHelper.updateLives(comment.getUsername(), +1, success -> {
-                    if (success) {
-                        Log.d("Lives", "Αύξηση lives για τον " + comment.getUsername());
-                    }
-                });
-
-
+                showConfirmDialogAndDelete(comment);
             }
         });
 
@@ -127,13 +115,24 @@ public class PostDetailActivity extends AppCompatActivity {
 
     }
 
-    private void showConfirmDialogAndDelete() {
+    private void showConfirmDialogAndDelete(Comment comment) {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.problemSolved))
                 .setMessage(getString(R.string.deletePostSure))
                 .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
                     FirestoreHelper.deletePostAndComments(currentPost.getId(), success -> {
                         if (success) {
+                            FirestoreHelper.sendNotification(
+                                    comment.getUsername(), // αυτός που έγραψε το comment
+                                    currentUser.getUsername() + getString(R.string.commentHelped),
+                                    successful -> {}
+                            );
+
+                            FirestoreHelper.updateLives(comment.getUsername(), +1, successful -> {
+                                if (successful) {
+                                    Log.d("Lives", "Αύξηση lives για τον " + comment.getUsername());
+                                }
+                            });
                             Toast.makeText(this, getString(R.string.postDeleted), Toast.LENGTH_SHORT).show();
                             finish(); // Κλείνει το activity
                         } else {

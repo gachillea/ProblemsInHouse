@@ -58,6 +58,9 @@ public class FirestoreHelper {
                             Long lives = (Long) documentSnapshot.get("lives");
                             callback.onResult(new User(username, password, lives));
                         }
+                        else {
+                            callback.onResult(null);
+                        }
                     } else {
                         callback.onResult(null);
                     }

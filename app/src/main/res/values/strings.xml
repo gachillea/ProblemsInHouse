@@ -37,5 +37,7 @@
     <string name="myProfile">My Profile</string>
     <string name="Notifications">Notifications</string>
     <string name="wasHelpful">This comment helped me</string>
+    <string name="writeComment">Write comment...</string>
+    <string name="send">Send</string>
 
 </resources>

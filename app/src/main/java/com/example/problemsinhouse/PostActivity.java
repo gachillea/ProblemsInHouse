@@ -54,6 +54,8 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        checkAndRequestPermissions();
+
         titleInput = findViewById(R.id.titleInput);
         contentInput = findViewById(R.id.contentInput);
         submitPostButton = findViewById(R.id.submitPostButton);
@@ -150,6 +152,27 @@ public class PostActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void checkAndRequestPermissions() {
+        String[] permissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        };
+
+        boolean permissionsNeeded = false;
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsNeeded = true;
+                break;
+            }
+        }
+
+        if (permissionsNeeded) {
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_CAMERA_PERMISSION);
+        }
+    }
+
 
     private void dispatchTakePictureIntent() throws IOException {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
