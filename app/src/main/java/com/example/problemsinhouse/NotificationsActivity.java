@@ -1,7 +1,10 @@
 package com.example.problemsinhouse;
 
+import static android.widget.Toast.LENGTH_LONG;
+
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +38,10 @@ public class NotificationsActivity extends AppCompatActivity {
         User currentUser = getIntent().getParcelableExtra("user");
 
         loadNotifications(currentUser.getUsername());
+        if (notificationList.isEmpty())
+        {
+            Toast.makeText(this, getString(R.string.noNotifications), LENGTH_LONG);
+        }
     }
 
     private void loadNotifications(String username) {

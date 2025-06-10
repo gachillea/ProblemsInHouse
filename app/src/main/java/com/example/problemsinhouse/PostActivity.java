@@ -48,6 +48,7 @@ public class PostActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private Uri imageUri;
     private File file;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class PostActivity extends AppCompatActivity {
                 return;
             }
 
-            User user = getIntent().getParcelableExtra("user");
+            user = getIntent().getParcelableExtra("user");
             if (user == null) {
                 Toast.makeText(this, getString(R.string.noLogin), Toast.LENGTH_SHORT).show();
                 finish();
@@ -106,6 +107,7 @@ public class PostActivity extends AppCompatActivity {
 
             if (user.getLives()==0)
             {
+                Log.d("lives", "lives");
                 Toast.makeText(this, getString(R.string.zeroLives), Toast.LENGTH_LONG).show();
                 finish();
                 return;
@@ -127,12 +129,10 @@ public class PostActivity extends AppCompatActivity {
 
                                         FirestoreHelper.updateLives(user.getUsername(), -1, successful -> {
                                             if (successful) {
-                                                user.setLives(user.getLives()-1);
-                                                Log.d("Lives", user.getLives().toString());
+                                                finish();
                                             }
                                         });
 
-                                        finish();
                                     } else {
                                         Toast.makeText(this, getString(R.string.postFail), Toast.LENGTH_SHORT).show();
                                     }
@@ -225,7 +225,6 @@ public class PostActivity extends AppCompatActivity {
     }
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        Log.d("Lives","mphke");
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (v instanceof TextView) {

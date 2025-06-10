@@ -71,4 +71,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirestoreHelper.checkUser(user.getUsername(), user.getPassword(), updatedUser ->
+        {
+            user = updatedUser;
+            Log.d("lives", user.getLives().toString());
+        });
+    }
 }

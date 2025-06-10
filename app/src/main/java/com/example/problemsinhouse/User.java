@@ -2,6 +2,7 @@ package com.example.problemsinhouse;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -56,7 +57,9 @@ public class User implements Parcelable {
     }
 
     public void setLives(long l) {
+        Log.d("Lives", l + lives.toString());
         this.lives = l;
+        Log.d("Lives", l + lives.toString());
     }
 
     public String getPassword() {

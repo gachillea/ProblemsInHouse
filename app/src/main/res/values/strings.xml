@@ -39,5 +39,7 @@
     <string name="wasHelpful">This comment helped me</string>
     <string name="writeComment">Write comment...</string>
     <string name="send">Send</string>
+    <string name="noNotifications">No notifications</string>
+    <string name="submitPost">Submit Post</string>
 
 </resources>

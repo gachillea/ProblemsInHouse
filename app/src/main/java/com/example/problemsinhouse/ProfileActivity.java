@@ -49,8 +49,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         usernameTextView.setText(currentUser.getUsername());
 
-        FirestoreHelper.checkUser(currentUser.getUsername(), currentUser.getPassword(), possiblyUpdatedUser ->{
-            currentUser = possiblyUpdatedUser; // για την περίπτωση που ο αριθμός των ζωών του χρήστη έχει αλλάξει
+        //FirestoreHelper.checkUser(currentUser.getUsername(), currentUser.getPassword(), possiblyUpdatedUser ->{
+            //currentUser = possiblyUpdatedUser; // για την περίπτωση που ο αριθμός των ζωών του χρήστη έχει αλλάξει
 
 
 
@@ -66,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
             setupRecyclerView();
             loadUserPosts();
 
-        });
+        //});
 
 
     }
