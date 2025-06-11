@@ -114,6 +114,8 @@ public class PostActivity extends AppCompatActivity {
             }
 
             try {
+
+                Toast.makeText(this, getString(R.string.uploadWait), Toast.LENGTH_SHORT).show();
                 InputStream stream = new FileInputStream(photoFile);
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                 StorageReference imageRef = storageRef.child("images/" + photoFile.getName());

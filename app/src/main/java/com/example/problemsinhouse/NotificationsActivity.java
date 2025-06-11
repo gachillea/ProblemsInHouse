@@ -38,18 +38,19 @@ public class NotificationsActivity extends AppCompatActivity {
         User currentUser = getIntent().getParcelableExtra("user");
 
         loadNotifications(currentUser.getUsername());
-        if (notificationList.isEmpty())
-        {
-            Toast.makeText(this, getString(R.string.noNotifications), LENGTH_LONG);
-        }
     }
 
     private void loadNotifications(String username) {
         FirestoreHelper.getNotificationsForUser(username, notifications -> {
             notificationList.clear();
-            if (notifications != null) {
+            if (notifications.isEmpty() || notifications == null)
+            {
+                Toast.makeText(this, getString(R.string.noNotifications), LENGTH_LONG).show();
+            }
+            else {
                 notificationList.addAll(notifications);
             }
+
             adapter.notifyDataSetChanged();
         });
     }
